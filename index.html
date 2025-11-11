@@ -87,7 +87,7 @@
 <body>
 
   <!-- Full-page background video (paused until first scroll) -->
-  <video id="bg-video" muted loop playsinline>
+  <video id="bg-video" muted loop playsinline preload="auto">
     <source src="assets/bg-video.mp4" type="video/mp4"/>
   </video>
 
@@ -302,46 +302,41 @@
 
   <!-- Initialize Lucide + Scroll Video Logic -->
   <script>
-    // icons
-    lucide.createIcons();
+lucide.createIcons();
 
-    // background video: play only after first scroll; keep playing afterward
-    (function(){
-      const vid = document.getElementById('bg-video');
-      let hasPlayed = false;
+(function(){
+  const vid = document.getElementById('bg-video');
 
-      function tryPlay(){
-        if(!hasPlayed){
-          hasPlayed = true;
-          // ensure starts from beginning and plays
-          try { vid.currentTime = 0; } catch(e){}
-          const p = vid.play();
-          if(p && typeof p.catch === 'function'){ p.catch(()=>{}); }
-          window.removeEventListener('scroll', onFirstScroll);
-          window.removeEventListener('touchmove', onFirstScroll, {passive:true});
-        }
-      }
-      function onFirstScroll(){ tryPlay(); }
+  // ensure video is paused — we will control time manually
+  vid.pause();
+  let durationSet = false;
 
-      // start paused
-      try { vid.pause(); } catch(e){}
+  function animateScroll(){
+    const scrollTop = window.scrollY;
+    const scrollHeight = document.body.scrollHeight - window.innerHeight;
 
-      // parallax-like shift
-      function onParallax(){
-        const y = window.scrollY || window.pageYOffset || 0;
-        // move slower than scroll for subtle parallax
-        vid.style.transform = 'translateY(' + (y * 0.2) + 'px)';
-      }
+    // normalized scroll % (0 to 1)
+    const scrollPercent = scrollTop / scrollHeight;
 
-      // listeners
-      window.addEventListener('scroll', onFirstScroll, {passive:true});
-      window.addEventListener('touchmove', onFirstScroll, {passive:true});
-      window.addEventListener('scroll', onParallax, {passive:true});
-      window.addEventListener('touchmove', onParallax, {passive:true});
-    })();
-  </script>
+    if(vid.duration && !isNaN(vid.duration)){
+      durationSet = true;
+      vid.currentTime = scrollPercent * vid.duration;
+    }
+
+    requestAnimationFrame(animateScroll);
+  }
+
+  // start animation when metadata ready (duration available)
+  vid.addEventListener("loadedmetadata", ()=> {
+    vid.pause();
+    animateScroll();
+  });
+})();
+</script>
+
 </body>
 </html>
+
 
 
 
