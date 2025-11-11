@@ -87,7 +87,7 @@
 <body>
 
   <!-- Full-page background video (paused until first scroll) -->
-  <video id="bg-video" muted loop playsinline preload="auto">
+  <video id="bg-video" muted loop playsinline preload="auto" webkit-playsinline disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback">
     <source src="assets/bg-video.mp4" type="video/mp4"/>
   </video>
 
@@ -302,40 +302,69 @@
 
   <!-- Initialize Lucide + Scroll Video Logic -->
   <script>
-lucide.createIcons();
+  // icons
+  try { lucide.createIcons(); } catch(e) {}
 
-(function(){
-  const vid = document.getElementById('bg-video');
+  (function () {
+    const vid = document.getElementById('bg-video');
 
-  // ensure video is paused — we will control time manually
-  vid.pause();
-  let durationSet = false;
+    // Safety: start paused; browsers require muted+inline to autoplay
+    try { vid.pause(); } catch(e) {}
 
-  function animateScroll(){
-    const scrollTop = window.scrollY;
-    const scrollHeight = document.body.scrollHeight - window.innerHeight;
+    let scrollTimer = null;
+    let tryingToPlay = false;
 
-    // normalized scroll % (0 to 1)
-    const scrollPercent = scrollTop / scrollHeight;
+    // Play when scrolling, pause shortly after scrolling stops
+    function onScroll() {
+      // Play if not already trying/playing
+      if (vid.paused && !tryingToPlay) {
+        tryingToPlay = true;
+        const p = vid.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => {/* ignore autoplay rejections */});
+        }
+        // reset flag once state updates
+        setTimeout(() => { tryingToPlay = false; }, 50);
+      }
 
-    if(vid.duration && !isNaN(vid.duration)){
-      durationSet = true;
-      vid.currentTime = scrollPercent * vid.duration;
+      // Debounce pause
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        // Pause cleanly at the frame user ended on
+        try { vid.pause(); } catch(e) {}
+      }, 120);
     }
 
-    requestAnimationFrame(animateScroll);
-  }
+    // Only run when the video metadata is ready (duration known)
+    function onReady() {
+      // Pre-seek a tiny bit to “wake up” the decoder for snappier first frame
+      try { vid.currentTime = Math.min(0.01, (vid.duration || 0)); } catch(e) {}
+      // Event wiring
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('touchmove', onScroll, { passive: true });
 
-  // start animation when metadata ready (duration available)
-  vid.addEventListener("loadedmetadata", ()=> {
-    vid.pause();
-    animateScroll();
-  });
-})();
+      // Pause when tab is hidden; resume-on-scroll when visible
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { try { vid.pause(); } catch(e) {} }
+      });
+
+      // Ensure we start on a clean paused frame
+      try { vid.pause(); } catch(e) {}
+    }
+
+    // Kick off when ready
+    if (vid.readyState >= 1) onReady();
+    else vid.addEventListener('loadedmetadata', onReady);
+
+    // BONUS: if user is already mid-page on load, nudge once so it plays
+    window.addEventListener('load', () => { if (window.scrollY > 0) onScroll(); }, { once: true });
+  })();
 </script>
+
 
 </body>
 </html>
+
 
 
 
