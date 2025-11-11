@@ -86,10 +86,23 @@
 </head>
 <body>
 
-  <!-- Full-page background video (paused until first scroll) -->
-  <video id="bg-video" muted loop playsinline preload="auto" webkit-playsinline disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback">
-    <source src="assets/bg-video-compressed.mp4" type="video/mp4"/>
-  </video>
+<!-- Full-page background video (optimized for speed) -->
+<video 
+  id="bg-video"
+  autoplay 
+  muted 
+  loop 
+  playsinline 
+  preload="auto" 
+  webkit-playsinline 
+  disablepictureinpicture 
+  controlslist="nodownload nofullscreen noremoteplayback"
+>
+  <source src="assets/bg-video-compressed.webm" type="video/webm" />
+  <source src="assets/bg-video-compressed.mp4" type="video/mp4" />
+</video>
+
+  
 
   <!-- Navigation Bar -->
   <nav class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
@@ -369,6 +382,7 @@
 
 </body>
 </html>
+
 
 
 
