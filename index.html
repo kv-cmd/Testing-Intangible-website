@@ -82,34 +82,21 @@
       transform:translateY(0); /* will be parallax-shifted on scroll */
       transition:opacity .3s ease;
     }
-  /* cyan edge glow around text, same tone as tiles */
+ /* White text that glows cyan only on hover (matches tile glow) */
 .glow-outline {
   position: relative;
-  color: inherit;
-  transition: all 0.25s ease;
+  color: #ffffff; /* Keep white */
+  transition: all 0.3s ease;
+  text-shadow: none; /* No glow by default */
 }
 
-.glow-outline::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0; top: 0;
-  width: 100%;
-  height: 100%;
+.glow-outline:hover {
   text-shadow:
-    0 0 4px rgba(0,228,255,0.45),
-    0 0 8px rgba(0,228,255,0.35),
-    0 0 12px rgba(0,228,255,0.25);
-  color: transparent;
-  pointer-events: none;
+    0 0 6px rgba(0, 228, 255, 0.6),
+    0 0 12px rgba(0, 228, 255, 0.45),
+    0 0 18px rgba(0, 228, 255, 0.35);
 }
 
-/* optional hover intensify */
-.glow-outline:hover::after {
-  text-shadow:
-    0 0 6px rgba(0,228,255,0.65),
-    0 0 14px rgba(0,228,255,0.45),
-    0 0 22px rgba(0,228,255,0.35);
-}
 
   </style>
 </head>
@@ -174,11 +161,10 @@
 
         <!-- Remove big H1 “The Autonomous Workforce is Here.” -->
         <!-- Keep a concise 2-line statement (no highlight) -->
-       <p class="text-2xl sm:text-3xl text-gray-200 max-w-3xl mx-auto mb-10 leading-relaxed font-semibold">
-  We build an <span class="glow-outline" data-text="Intangible">Intangible</span> workforce that 
-  <span class="glow-outline" data-text="partners">partners</span> with you to lift efficiency, productivity, and value.
+      <p class="text-2xl sm:text-3xl text-gray-200 max-w-3xl mx-auto mb-10 leading-relaxed font-semibold">
+  We build an <span class="glow-outline">Intangible</span> workforce that 
+  <span class="glow-outline">partners</span> with you to lift efficiency, productivity, and value.
 </p>
-
 
         <a href="https://calendar.app.google/w2JSuT6QmFiQhEDf6" target="_blank" class="inline-flex items-center justify-center px-8 py-3 text-lg font-bold rounded-full bg-cyan-500 text-gray-950 hover:bg-cyan-400 transition-all duration-300 shadow-xl shadow-cyan-500/50 transform hover:scale-[1.03]">
           Let's Talk
@@ -413,6 +399,7 @@
 
 </body>
 </html>
+
 
 
 
