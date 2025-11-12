@@ -82,6 +82,23 @@
       transform:translateY(0); /* will be parallax-shifted on scroll */
       transition:opacity .3s ease;
     }
+    /* Neon blue glow for highlighted words */
+.glow-text {
+  color: var(--primary-neon);
+  text-shadow:
+    0 0 5px rgba(0, 228, 255, 0.8),
+    0 0 10px rgba(0, 228, 255, 0.6),
+    0 0 20px rgba(0, 228, 255, 0.4);
+  font-weight: 700;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
+.glow-text:hover {
+  text-shadow:
+    0 0 8px rgba(0, 228, 255, 0.9),
+    0 0 18px rgba(0, 228, 255, 0.7),
+    0 0 30px rgba(0, 228, 255, 0.5);
+}
   </style>
 </head>
 <body>
@@ -146,8 +163,8 @@
         <!-- Remove big H1 “The Autonomous Workforce is Here.” -->
         <!-- Keep a concise 2-line statement (no highlight) -->
         <p class="text-2xl sm:text-3xl text-gray-200 max-w-3xl mx-auto mb-10 leading-relaxed font-semibold">
-          We build an Intangible workforce that partners with you to lift efficiency, productivity, and value.
-        </p>
+  We build an <span class="glow-text">Intangible</span> workforce that <span class="glow-text">partners</span> with you to lift efficiency, productivity, and value.
+</p>
 
         <a href="https://calendar.app.google/w2JSuT6QmFiQhEDf6" target="_blank" class="inline-flex items-center justify-center px-8 py-3 text-lg font-bold rounded-full bg-cyan-500 text-gray-950 hover:bg-cyan-400 transition-all duration-300 shadow-xl shadow-cyan-500/50 transform hover:scale-[1.03]">
           Let's Talk
@@ -161,7 +178,7 @@
         <div class="text-center mb-12">
           <!-- Removed big heading; keep a shorter line -->
           <p class="text-2xl sm:text-3xl text-gray-200 max-w-3xl mx-auto font-semibold">
-            Reliable AI workforce — human-level performance, super-human intelligence — tailored to your domain.
+            Reliable AI workforce with human-level performance, super-human intelligence, and tailored to your domain.
           </p>
         </div>
 
@@ -382,6 +399,7 @@
 
 </body>
 </html>
+
 
 
 
